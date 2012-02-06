@@ -1,3 +1,2 @@
 # git ignore file
-
-ASLib/obj/
+\*/obj/*
