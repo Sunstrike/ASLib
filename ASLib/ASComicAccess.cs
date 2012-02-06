@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace ASLib
 {
-    public class Class1
+    class ASComicAccess
     {
+
     }
 }
