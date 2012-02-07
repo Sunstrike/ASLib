@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 11
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ASLib", "ASLib\ASLib.csproj", "{DE6E1DA0-80DD-4823-9566-9C23A136D211}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ASLibTestHarness", "ASLibTestHarness\ASLibTestHarness.csproj", "{EA9B4318-ABC4-468C-AB6C-40BD8C824A18}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +15,10 @@ Global
 		{DE6E1DA0-80DD-4823-9566-9C23A136D211}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DE6E1DA0-80DD-4823-9566-9C23A136D211}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DE6E1DA0-80DD-4823-9566-9C23A136D211}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA9B4318-ABC4-468C-AB6C-40BD8C824A18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA9B4318-ABC4-468C-AB6C-40BD8C824A18}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA9B4318-ABC4-468C-AB6C-40BD8C824A18}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA9B4318-ABC4-468C-AB6C-40BD8C824A18}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
