@@ -70,7 +70,11 @@ namespace ASLibTestHarness
 
         private static void xkcdTestCase()
         {
-            throw new NotImplementedException(); // TODO: Replace with test() function of xkcd's testcase object
+            xkcdTests testUnit = new xkcdTests();
+
+            testUnit.run(); // Let the module take over.
+
+            Console.ReadLine(); // Just for pauseness
         }
 
         private static string GetChoice()

@@ -32,14 +32,14 @@ namespace ASLib
         {
             public class ComicMetadata // Used for deserializing JSON data
             {
-                string num { get; set; }
-                string img { get; set; }
-                string safe_title { get; set; }
-                string day { get; set; }
-                string month { get; set; }
-                string year { get; set; }
-                string transcript { get; set; }
-                string alt { get; set; }
+                public string num { get; set; }
+                public string img { get; set; }
+                public string safe_title { get; set; }
+                public string day { get; set; }
+                public string month { get; set; }
+                public string year { get; set; }
+                public string transcript { get; set; }
+                public string alt { get; set; }
             } 
 
             static private ComicMetadata __parseXkcdJSON(string jsonData) // Parses JSON data provided as a string into a new ComicMetadata object
@@ -64,8 +64,8 @@ namespace ASLib
 
                 try
                 {
-                    byte[] rawData = connectAgent.DownloadData("http://xkcd.com/"+id+"/info.0.json");
-                    returnValue = Encoding.Unicode.GetString(rawData);
+                    byte[] rawData = connectAgent.DownloadData("http://xkcd.com/"+ id.ToString() +"/info.0.json");
+                    returnValue = Encoding.ASCII.GetString(rawData); // xkcd JSON feeds are in ASCII!
                 } catch (WebException) {
                     Debug.WriteLine("Could not download file.");
                     returnValue = "EE";
@@ -82,7 +82,7 @@ namespace ASLib
                 try
                 {
                     byte[] rawData = connectAgent.DownloadData("http://xkcd.com/info.0.json");
-                    returnValue = Encoding.Unicode.GetString(rawData);
+                    returnValue = Encoding.ASCII.GetString(rawData); // xkcd JSON feeds are in ASCII!
                 }
                 catch (WebException)
                 {
