@@ -65,8 +65,9 @@ namespace ASLibTestHarness
                 if (output != "")
                 {
                     Console.WriteLine("TEST OUTPUT:");
-                    Console.WriteLine(output);
+                    Console.WriteLine(output + "\n");
                 }
+                Console.WriteLine("Press any key to crash...");
                 Console.ReadLine();
                 throw new IOException("Cannot continue without read/write access to DB file!");
             }
