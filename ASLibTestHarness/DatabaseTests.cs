@@ -24,11 +24,12 @@ namespace ASLibTestHarness
 {
     class DatabaseTests
     {
+        public string output { get; set; }
+        
         public void run() // Start function called from the harness core
         {
             string path = Environment.ExpandEnvironmentVariables("%HOMEDRIVE%%HOMEPATH%") + "\\AppData\\Roaming\\ASLibTestHarness\\TestDB.sdf"; // Test Harness DB file path
             //                        ^^^^^^^^^^^^^^^^^^^^^^^^^^ Grab user home path        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Append path to AppData folder and DB file
-            string output = "";
 
             // Setup
             Console.Write("Checking if target folder exists... ");
@@ -53,6 +54,33 @@ namespace ASLibTestHarness
                 Console.Write("PASS");
                 Console.ResetColor(); // Back to normal colour
                 Console.WriteLine("]");
+            }
+            else
+            {
+                Console.Write("[");
+                Console.ForegroundColor = ConsoleColor.DarkRed; // RED fail text
+                Console.Write("FAIL");
+                Console.ResetColor(); // Back to normal colour
+                Console.WriteLine("]");
+                if (output != "")
+                {
+                    Console.WriteLine("TEST OUTPUT:");
+                    Console.WriteLine(output);
+                }
+                Console.ReadLine();
+                throw new IOException("Cannot continue without read/write access to DB file!");
+            }
+
+            Console.Write("\nTesting Data insertion... ");
+            throw new NotImplementedException("Data insertion routines not available yet.");
+            /*if (testDBCreation(testClass))
+            {
+                // Note: All this guff isn't technically neccessary, but it's personal preference
+                Console.Write("[");
+                Console.ForegroundColor = ConsoleColor.DarkGreen; // GREEN pass text
+                Console.Write("PASS");
+                Console.ResetColor(); // Back to normal colour
+                Console.WriteLine("]");
                 Console.WriteLine("TEST OUTPUT:");
                 Console.WriteLine("See " + path);
             }
@@ -63,7 +91,7 @@ namespace ASLibTestHarness
                 Console.Write("FAIL");
                 Console.ResetColor(); // Back to normal colour
                 Console.WriteLine("]");
-            }
+            }*/
         }
 
         private bool testDBCreation(ASComicDatabase engine)
@@ -71,6 +99,11 @@ namespace ASLibTestHarness
             try
             {
                 engine.createDbFile();
+            }
+            catch (System.IO.IOException e)
+            {
+                output = "IOException: Process could not access file.\n\nFULL TRACE:\n" + e.ToString();
+                return false;
             }
             catch (Exception e)
             {
