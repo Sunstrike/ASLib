@@ -59,7 +59,7 @@ namespace ASLib
                  * ---------------------------
                  * We use ntext for dates: The 'datetime' type is accurate down to milliseconds, while we only have day accuracy (I would use an ASCII field, but SQLCE is Unicode-only (Damnit i18n))
                  * We use smallint for num: These numbers will never (within a reasonable timescale) go above 32767, thus we use a smaller variable to save space
-                 * We use ntext for text fields: nvarchar takes up more space for the same job it seems from MSDN's docs
+                 * We use ntext for text fields: nvarchar is limited to 255 characters and uses the same storage space as ntext it seems from MSDN documentation
                  * 
                  * date format: DD:MM:YYYY
                  * This is used for easy reparsing back into day, month and year consistent with the JSON metadata

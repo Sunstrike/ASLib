@@ -32,16 +32,13 @@ namespace ASLibTestHarness
             do
             {
                 input = GetChoice();
-                if (input == "1" /*|| input == "2"*/) {
+                if (input == "1" || input == "2") {
                     doBreak = 1;
                     try
                     {
                         Console.Clear(); // Apparently MS say this has to be try..catch'ed due to breaking on writing to file.
                     }
-                    catch
-                    {
-                        // Do nuthin'
-                    }
+                    catch { } // Catch wha?
                 } else {
                     Console.WriteLine("Invalid input.");
                     Console.WriteLine();
@@ -63,6 +60,9 @@ namespace ASLibTestHarness
                 case "1":
                     xkcdTestCase(); // To Xkcd Tests
                     break;
+                case "2":
+                    databaseTestCase();
+                    break;
                 default:
                     throw new NotImplementedException(); // Because why should we handle the impossible?
             }
@@ -77,10 +77,20 @@ namespace ASLibTestHarness
             Console.ReadLine(); // Just for pauseness
         }
 
+        private static void databaseTestCase()
+        {
+            DatabaseTests testUnit = new DatabaseTests();
+
+            testUnit.run(); // Let the module take over.
+
+            Console.ReadLine(); // Just for pauseness
+        }
+
         private static string GetChoice()
         {
             Console.WriteLine("TEST HARNESSES:");
             Console.WriteLine(" 1. ASComicAccess");
+            Console.WriteLine(" 2. ASComicDatabase");
             Console.WriteLine();
             Console.Write("Enter option: ");
             return Console.ReadLine();
