@@ -39,12 +39,13 @@ namespace ASLibTestHarness
                 Console.Write("no, creating folder... ");
                 Directory.CreateDirectory(dirPath);
             }
-            Console.WriteLine("done.");
+            Console.WriteLine("Done.");
 
             Console.Write("Instantiating instance of ASComicDatabase... ");
             ASComicDatabase testClass = new ASComicDatabase(path);
-            Console.WriteLine("Done.\n");
+            Console.WriteLine("Done.");
 
+            output = ""; // Reset this, just in case
             Console.Write("\nTesting DB creation with path " + path + "... ");
             if (testDBCreation(testClass))
             {
@@ -72,9 +73,8 @@ namespace ASLibTestHarness
                 throw new IOException("Cannot continue without read/write access to DB file!");
             }
 
-            Console.Write("\nTesting Data insertion... ");
-            throw new NotImplementedException("Data insertion routines not available yet.");
-            /*if (testDBCreation(testClass))
+            Console.Write("\nTesting Data insertion (for metadata)... ");
+            if (testInsertMetadata(testClass))
             {
                 // Note: All this guff isn't technically neccessary, but it's personal preference
                 Console.Write("[");
@@ -82,8 +82,11 @@ namespace ASLibTestHarness
                 Console.Write("PASS");
                 Console.ResetColor(); // Back to normal colour
                 Console.WriteLine("]");
-                Console.WriteLine("TEST OUTPUT:");
-                Console.WriteLine("See " + path);
+                if (output != "")
+                {
+                    Console.WriteLine("TEST OUTPUT:");
+                    Console.WriteLine(output + "\n");
+                }
             }
             else
             {
@@ -92,10 +95,10 @@ namespace ASLibTestHarness
                 Console.Write("FAIL");
                 Console.ResetColor(); // Back to normal colour
                 Console.WriteLine("]");
-            }*/
+            }
         }
 
-        private bool testDBCreation(ASComicDatabase engine)
+        private bool testDBCreation(ASComicDatabase engine) // Test the createDbFile function
         {
             try
             {
@@ -108,10 +111,25 @@ namespace ASLibTestHarness
             }
             catch (Exception e)
             {
-                Debug.WriteLine("EXCEPTION CAUGHT FROM DB ENGINE:\n\n" + e.ToString()); // Log exception to debug channel
+                Debug.WriteLine("UNKNOWN EXCEPTION CAUGHT FROM DB ENGINE:\n\n" + e.ToString()); // Log exception to debug channel
                 return false; // Fail test
             }
             return true; // Pass test
+        }
+
+        private bool testInsertMetadata(ASComicDatabase engine) // Test the insertRow function
+        {
+            throw new NotImplementedException();
+        }
+
+        private bool testInsertImageData(ASComicDatabase engine) // Test updateImgData function
+        {
+            throw new NotImplementedException();
+        }
+
+        private bool testDeleteImageData(ASComicDatabase engine) // Test deleteImgData function
+        {
+            throw new NotImplementedException();
         }
     }
 }
