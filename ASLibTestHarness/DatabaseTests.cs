@@ -28,6 +28,7 @@ namespace ASLibTestHarness
         
         public void run() // Start function called from the harness core
         {
+            ConsoleServices OutputManager = new ConsoleServices();
             string path = Environment.ExpandEnvironmentVariables("%HOMEDRIVE%%HOMEPATH%") + "\\AppData\\Roaming\\ASLibTestHarness\\TestDB.sdf"; // Test Harness DB file path
             //                        ^^^^^^^^^^^^^^^^^^^^^^^^^^ Grab user home path        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Append path to AppData folder and DB file
 
@@ -49,20 +50,11 @@ namespace ASLibTestHarness
             Console.Write("\nTesting DB creation with path " + path + "... ");
             if (testDBCreation(testClass))
             {
-                // Note: All this guff isn't technically neccessary, but it's personal preference
-                Console.Write("[");
-                Console.ForegroundColor = ConsoleColor.DarkGreen; // GREEN pass text
-                Console.Write("PASS");
-                Console.ResetColor(); // Back to normal colour
-                Console.WriteLine("]");
+                OutputManager.writePassText();
             }
             else
             {
-                Console.Write("[");
-                Console.ForegroundColor = ConsoleColor.DarkRed; // RED fail text
-                Console.Write("FAIL");
-                Console.ResetColor(); // Back to normal colour
-                Console.WriteLine("]");
+                OutputManager.writeFailText();
                 if (output != "")
                 {
                     Console.WriteLine("TEST OUTPUT:");
@@ -73,15 +65,11 @@ namespace ASLibTestHarness
                 throw new IOException("Cannot continue without read/write access to DB file!");
             }
 
+            output = "";
             Console.Write("\nTesting Data insertion (for metadata)... ");
             if (testInsertMetadata(testClass))
             {
-                // Note: All this guff isn't technically neccessary, but it's personal preference
-                Console.Write("[");
-                Console.ForegroundColor = ConsoleColor.DarkGreen; // GREEN pass text
-                Console.Write("PASS");
-                Console.ResetColor(); // Back to normal colour
-                Console.WriteLine("]");
+                OutputManager.writePassText();
                 if (output != "")
                 {
                     Console.WriteLine("TEST OUTPUT:");
@@ -90,11 +78,7 @@ namespace ASLibTestHarness
             }
             else
             {
-                Console.Write("[");
-                Console.ForegroundColor = ConsoleColor.DarkRed; // RED fail text
-                Console.Write("FAIL");
-                Console.ResetColor(); // Back to normal colour
-                Console.WriteLine("]");
+                OutputManager.writeFailText();
             }
         }
 
@@ -119,7 +103,15 @@ namespace ASLibTestHarness
 
         private bool testInsertMetadata(ASComicDatabase engine) // Test the insertRow function
         {
-            throw new NotImplementedException();
+            try
+            {
+                engine.insertRow(1023, "http://imgs.xkcd.com/comics/late_night_pbs.png", "Late-Night PBS", "Then it switched to these old black-and-white tapes of Bob Ross slumped against the wall of an empty room, painting the least happy trees you've ever seen. Either PBS needs to beef up studio security or I need to stop using Ambien to sleep.", "[[Scruffy is rubbing sleep out of their eyes and talking to clean shaven.]]\nScruffy: Have you ever watched PBS late at night?\nScruffy: I fell asleep after \nDownton\n and woke up at like 3 AM.\n\n[[The upper portion of the panel continues dialogue, while the lower shows a drunk gameshow host and several contestants.  The monitor shows a field of crosses, presumably graves.]]\nScruffy: \nWhere in the World is Carmen Sandiego\n was back on, except the host hadn't aged well and he'd clearly been drinking.\nScruffy: Every question took them to some horrible place like Mogadishu or the Cambodian killing fields.\n\n[[Now it shows a bookshelf revealing a hidden room.]]\nScruffy: The kids were freaked out, but they kept playing.  Eventually they were told they'd found Carmen Sandiego hiding behind a bookshelf in a Dutch apartment.\n\nScruffy: The Chief appeared and asked \"Are you \nproud\n of what you've become?\"\nScruffy: Then Rockapella walked out and just glared at the kids until they started crying.\nClean-shaven: I, uh, don't remember the old show being that dark.\nScruffy: Maybe we were too young to pick up on it.\n\n{{Title text: Then it switched to these old black-and-white tapes of Bob Ross slumped against the wall of an empty room, painting the least happy trees you've ever seen. Either PBS needs to beef up studio security or I need to stop using Ambien to sleep.}}", "29:02:2012");
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
         }
 
         private bool testInsertImageData(ASComicDatabase engine) // Test updateImgData function

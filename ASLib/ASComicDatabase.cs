@@ -70,6 +70,7 @@ namespace ASLib
                     try
                     {
                         conn.Open(); // Establish connection to database (Why do embedded servers need connections? It's to a file!)
+                        cmd.Connection = conn;
                         cmd.ExecuteNonQuery(); // Run init query on database
                     }
                     catch (Exception ex)
@@ -115,14 +116,16 @@ namespace ASLib
                 using (SqlCeCommand cmd = new SqlCeCommand(@"INSERT comics (num, img, safe_title, alt, transcript, date) VALUES (@num, @img, @safe_title, @alt, @transcript, @date)")) // SQL command
                 {
                     // Add C# data to the SQL query
-                    cmd.Parameters.AddWithValue("@num", num);
-                    cmd.Parameters.AddWithValue("@img", img);
-                    cmd.Parameters.AddWithValue("@safe_title", safe_title);
-                    cmd.Parameters.AddWithValue("@alt", alt);
-                    cmd.Parameters.AddWithValue("@transcript", transcript);
-                    cmd.Parameters.AddWithValue("@date", date);
+                    cmd.Parameters.AddWithValue(@"@num", num);
+                    //cmd.Parameters.Add(new SqlCeParameter("@num", num));
+                    cmd.Parameters.AddWithValue(@"@img", img);
+                    cmd.Parameters.AddWithValue(@"@safe_title", safe_title);
+                    cmd.Parameters.AddWithValue(@"@alt", alt);
+                    cmd.Parameters.AddWithValue(@"@transcript", transcript);
+                    cmd.Parameters.AddWithValue(@"@date", date);
 
                     conn.Open(); // Open DB connection
+                    cmd.Connection = conn;
                     cmd.ExecuteNonQuery(); // Run query
                 }
             }
@@ -139,6 +142,7 @@ namespace ASLib
                     cmd.Parameters.AddWithValue("@img_data", image);
 
                     conn.Open(); // Open DB connection
+                    cmd.Connection = conn;
                     cmd.ExecuteNonQuery(); // Run query
                 }
             }
@@ -154,6 +158,7 @@ namespace ASLib
                     cmd.Parameters.AddWithValue("@num", num);
 
                     conn.Open(); // Open DB connection
+                    cmd.Connection = conn;
                     cmd.ExecuteNonQuery(); // Run query
                 }
             }
