@@ -79,6 +79,32 @@ namespace ASLibTestHarness
             else
             {
                 OutputManager.writeFailText();
+                if (output != "")
+                {
+                    Console.WriteLine("TEST OUTPUT:");
+                    Console.WriteLine(output + "\n");
+                }
+            }
+
+            output = "";
+            Console.Write("\nTesting Data retrieval (for metadata)... ");
+            if (testReadMetadata(testClass))
+            {
+                OutputManager.writePassText();
+                if (output != "")
+                {
+                    Console.WriteLine("TEST OUTPUT:");
+                    Console.WriteLine(output + "\n");
+                }
+            }
+            else
+            {
+                OutputManager.writeFailText();
+                if (output != "")
+                {
+                    Console.WriteLine("TEST OUTPUT:");
+                    Console.WriteLine(output + "\n");
+                }
             }
         }
 
@@ -112,6 +138,26 @@ namespace ASLibTestHarness
                 return false;
             }
             return true;
+        }
+
+        private bool testReadMetadata(ASComicDatabase engine) // Test getRow function
+        {
+            Dictionary<string,string> dict = new Dictionary<string,string>();
+            
+            try
+            {
+                dict = engine.getRow(1023);
+            }
+            catch
+            {
+                return false; // Query failed
+            }
+
+            if (dict.ContainsKey("safe_title") && dict.ContainsValue("Late-Night PBS"))
+            {
+                return true; // Verified there is actually valid data coming back
+            }
+            return false;
         }
 
         private bool testInsertImageData(ASComicDatabase engine) // Test updateImgData function

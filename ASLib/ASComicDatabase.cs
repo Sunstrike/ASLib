@@ -131,6 +131,56 @@ namespace ASLib
             }
         }
 
+        public Dictionary<string,string> getRow(int num) // NOT including image DATA, as that's not 'compulsory' data
+        {
+            string img, safe_title, alt, transcript, date;
+            img = "";
+            safe_title = "";
+            alt = "";
+            transcript = "";
+            date = "";
+            
+            using (SqlCeConnection conn = new SqlCeConnection(@"Data Source = " + dbPath)) // DB connection
+            {
+                using (SqlCeCommand cmd = new SqlCeCommand(@"SELECT img, safe_title, alt, transcript, date FROM comics WHERE (num = @num)")) // SQL command
+                {
+                    cmd.Parameters.AddWithValue(@"@num", num); // This is the ID we want to grab
+                    
+                    conn.Open(); // Open DB connection
+                    cmd.Connection = conn;
+                    SqlCeDataReader reader = cmd.ExecuteReader(); // Run query
+                    try
+                    {
+                        while (reader.Read())
+                        {
+                            img = reader.GetString(0); // First item is img
+                            safe_title = reader.GetString(1); // Second item is safe_title
+                            alt = reader.GetString(2); // Third item is alt
+                            transcript = reader.GetString(3); // Fourth item is the transcript
+                            date = reader.GetString(4); // Fifth item is the date
+                        }
+                    }
+                    catch (System.InvalidOperationException)
+                    {
+                        throw; // Isn't working
+                    }
+                    finally
+                    {
+                        reader.Close(); // Readers have to be closed
+                    }
+                }
+            }
+
+            Dictionary<string,string> dict = new Dictionary<string,string>();
+            dict.Add("img", img);
+            dict.Add("safe_title", safe_title);
+            dict.Add("alt", alt);
+            dict.Add("transcript", transcript);
+            dict.Add("date", date);
+
+            return dict;
+        }
+
         public void updateImgData(int num, Image image) // Used by Offline Mode to store actual images
         {
             using (SqlCeConnection conn = new SqlCeConnection(@"Data Source = " + dbPath)) // DB connection
