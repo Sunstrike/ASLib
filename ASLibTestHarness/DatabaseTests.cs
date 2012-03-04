@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using System.Drawing;
 
 using ASLib;
 
@@ -40,6 +41,17 @@ namespace ASLibTestHarness
                 Console.Write("no, creating folder... ");
                 Directory.CreateDirectory(dirPath);
             }
+            Console.WriteLine("Done.");
+
+            // Get image for later tests
+            Console.Write("Looking for comic 1023 test image... ");
+            if (!File.Exists(dirPath + "/1023.png"))
+            {
+                Console.Write("no. Please reimport the image to %APPDATA%/ASLibTestHarness.");
+                Console.ReadLine();
+                return;
+            }
+            Image imageFile = Image.FromFile(dirPath + "/1023.png");
             Console.WriteLine("Done.");
 
             Console.Write("Instantiating instance of ASComicDatabase... ");
@@ -86,6 +98,9 @@ namespace ASLibTestHarness
                 }
             }
 
+            Console.Write("Please verify data manually from server explorer...");
+            Console.ReadLine();
+
             output = "";
             Console.Write("\nTesting Data retrieval (for metadata)... ");
             if (testReadMetadata(testClass))
@@ -106,6 +121,75 @@ namespace ASLibTestHarness
                     Console.WriteLine(output + "\n");
                 }
             }
+
+            output = "";
+            Console.Write("\nTesting image insert... ");
+            if (testInsertImageData(testClass,imageFile))
+            {
+                OutputManager.writePassText();
+                if (output != "")
+                {
+                    Console.WriteLine("TEST OUTPUT:");
+                    Console.WriteLine(output + "\n");
+                }
+            }
+            else
+            {
+                OutputManager.writeFailText();
+                if (output != "")
+                {
+                    Console.WriteLine("TEST OUTPUT:");
+                    Console.WriteLine(output + "\n");
+                }
+            }
+
+            output = "";
+            Console.Write("\nTesting image retrieval... ");
+            if (testReadImage(testClass, dirPath))
+            {
+                OutputManager.writePassText();
+                if (output != "")
+                {
+                    Console.WriteLine("TEST OUTPUT:");
+                    Console.WriteLine(output + "\n");
+                }
+            }
+            else
+            {
+                OutputManager.writeFailText();
+                if (output != "")
+                {
+                    Console.WriteLine("TEST OUTPUT:");
+                    Console.WriteLine(output + "\n");
+                }
+            }
+
+            Console.Write("Please verify data manually in %APPDATA%/ASLibTestHarness/testOut.png...");
+            Console.ReadLine();
+
+            output = "";
+            Console.Write("\nTesting image delete... ");
+            if (testDeleteImageData(testClass))
+            {
+                OutputManager.writePassText();
+                if (output != "")
+                {
+                    Console.WriteLine("TEST OUTPUT:");
+                    Console.WriteLine(output + "\n");
+                }
+            }
+            else
+            {
+                OutputManager.writeFailText();
+                if (output != "")
+                {
+                    Console.WriteLine("TEST OUTPUT:");
+                    Console.WriteLine(output + "\n");
+                }
+            }
+
+            Console.Write("Please verify data manually from server explorer...");
+            Console.ReadLine();
         }
 
         private bool testDBCreation(ASComicDatabase engine) // Test the createDbFile function
@@ -160,14 +244,46 @@ namespace ASLibTestHarness
             return false;
         }
 
-        private bool testInsertImageData(ASComicDatabase engine) // Test updateImgData function
+        private bool testInsertImageData(ASComicDatabase engine, Image imageFile) // Test updateImgData function
         {
-            throw new NotImplementedException();
+            try
+            {
+                engine.updateImgData(1023, imageFile);
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
+
+        private bool testReadImage(ASComicDatabase engine, string dirPath) // Test getRow function
+        {
+            Image img;
+            
+            try
+            {
+                img = engine.getImageRow(1023);
+                img.Save(dirPath + "/testOut.png");
+            }
+            catch
+            {
+                return false; // Query failed
+            }
+            return true;
         }
 
         private bool testDeleteImageData(ASComicDatabase engine) // Test deleteImgData function
         {
-            throw new NotImplementedException();
+            try
+            {
+                engine.deleteImgData(1023);
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

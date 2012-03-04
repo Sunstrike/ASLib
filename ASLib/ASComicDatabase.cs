@@ -160,7 +160,7 @@ namespace ASLib
                             date = reader.GetString(4); // Fifth item is the date
                         }
                     }
-                    catch (System.InvalidOperationException)
+                    catch
                     {
                         throw; // Isn't working
                     }
@@ -183,19 +183,69 @@ namespace ASLib
 
         public void updateImgData(int num, Image image) // Used by Offline Mode to store actual images
         {
+            // Image to Bytes code from http://www.vcskicks.com/image-to-byte.php -- Thanks!
+            ImageConverter converter = new ImageConverter();
+            byte[] imageBytes = (byte[])converter.ConvertTo(image, typeof(byte[]));
+
             using (SqlCeConnection conn = new SqlCeConnection(@"Data Source = " + dbPath)) // DB connection
             {
                 using (SqlCeCommand cmd = new SqlCeCommand(@"UPDATE comics SET img_data = @img_data WHERE num = @num")) // SQL command
                 {
                     // Add C# data to SQL query
                     cmd.Parameters.AddWithValue("@num", num);
-                    cmd.Parameters.AddWithValue("@img_data", image);
+                    cmd.Parameters.AddWithValue("@img_data", imageBytes);
 
                     conn.Open(); // Open DB connection
                     cmd.Connection = conn;
                     cmd.ExecuteNonQuery(); // Run query
                 }
             }
+        }
+
+        public Image getImageRow(int num)
+        {
+            Image img;
+            byte[] imgBytes = null;
+
+            using (SqlCeConnection conn = new SqlCeConnection(@"Data Source = " + dbPath)) // DB connection
+            {
+                using (SqlCeCommand cmd = new SqlCeCommand(@"SELECT img_data FROM comics WHERE (num = @num)")) // SQL command
+                {
+                    cmd.Parameters.AddWithValue(@"@num", num); // This is the ID we want to grab
+
+                    conn.Open(); // Open DB connection
+                    cmd.Connection = conn;
+                    SqlCeDataReader reader = cmd.ExecuteReader(); // Run query
+                    try
+                    {
+                        while (reader.Read())
+                        {
+                            imgBytes = (byte[])reader.GetValue(0);
+                        }
+                    }
+                    catch
+                    {
+                        throw; // Isn't working
+                    }
+                    finally
+                    {
+                        reader.Close(); // Readers have to be closed
+
+                        // Translate bytes back into an image
+                        ImageConverter converter = new ImageConverter();
+                        try
+                        {
+                            img = (Image)converter.ConvertFrom(imgBytes);
+                        }
+                        catch
+                        {
+                            throw;
+                        }
+                    }
+                }
+            }
+
+            return img;
         }
 
         public void deleteImgData(int num) // Used to purge Offline Mode images
