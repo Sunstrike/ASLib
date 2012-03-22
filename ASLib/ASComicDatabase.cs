@@ -37,11 +37,20 @@ namespace ASLib
 
         public void createDbFile()
         {
+            // Create host folder if needed
+            string dirPath = Path.GetDirectoryName(dbPath);
+            if (!Directory.Exists(dirPath))
+            {
+                Directory.CreateDirectory(dirPath);
+            }
+            
+            // Delete any existing DB file
             if (File.Exists(dbPath)) // Remove the file if it already exists (like for Jettison)
             {
                 File.Delete(dbPath);
             }
 
+            // Build DB
             string connString = @"Data Source = " + dbPath; // Create connection string for SQLCE DB
             SqlCeEngine engine = new SqlCeEngine(connString); // Instantiate engine object
 
@@ -109,8 +118,15 @@ namespace ASLib
             }
         }
 
-        public void insertRow(int num, string img, string safe_title, string alt, string transcript, string date) // NOT including image DATA, as that's not 'compulsory' data
+        public void insertRow(ASComicAccess.xkcd.ComicMetadata metadata) // NOT including image DATA, as that's not 'compulsory' data
         {
+            int num = int.Parse(metadata.num);
+            string img = metadata.img;
+            string safe_title = metadata.safe_title;
+            string alt = metadata.alt;
+            string transcript = metadata.transcript;
+            string date = metadata.day + ":" + metadata.month + ":" + metadata.year;
+            
             using (SqlCeConnection conn = new SqlCeConnection(@"Data Source = " + dbPath)) // DB connection
             {
                 using (SqlCeCommand cmd = new SqlCeCommand(@"INSERT comics (num, img, safe_title, alt, transcript, date) VALUES (@num, @img, @safe_title, @alt, @transcript, @date)")) // SQL command
